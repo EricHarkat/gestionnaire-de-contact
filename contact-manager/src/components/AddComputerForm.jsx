@@ -8,11 +8,13 @@ const AddComputerForm = ({ onAddComputer }) => {
   const [owner, setOwner] = useState("");
   const [state, setState] = useState("");
   const [date, setDate] = useState("");
+  const [stateDetails, setStateDetails] = useState("")
   const [errors, setErrors] = useState({});
 
   const types = ["Serie X", "Serie T", "Mac","Dell"];
-  const states = ["Neuf", "Bon état", "Réparé", "Hors service"];
+  const states = ["Neuf", "Bon état", "Hors service"];
   const operatingSystems = ["Windows 11 Famille", "Windows 11 Pro", "Linux", "macOS"];
+  
 
   const validateForm = () => {
     const newErrors = {};
@@ -32,7 +34,16 @@ const AddComputerForm = ({ onAddComputer }) => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    onAddComputer({ id: Date.now(), serialNumber, type, operatingSystem, owner, state, date });
+    onAddComputer({ 
+      id: Date.now(),
+      serialNumber,
+      type,
+      operatingSystem,
+      owner,
+      state,
+      date,
+      stateDetails: state !== "Neuf" ? stateDetails : "",
+     });
 
     // Réinitialisation des champs après soumission
     setSerialNumber("");
@@ -41,6 +52,7 @@ const AddComputerForm = ({ onAddComputer }) => {
     setOwner("");
     setState("");
     setDate("");
+    setStateDetails("");
     setErrors({});
   };
 
@@ -102,6 +114,19 @@ const AddComputerForm = ({ onAddComputer }) => {
         </select>
         {errors.state && <span className="error-text">{errors.state}</span>}
       </label>
+
+      {/* Affichage du champ "Détails sur l'état" si l'ordinateur n'est pas neuf */}
+      {state !== "Neuf" && state && (
+        <label>
+          Détails sur l'état:
+          <textarea
+            value={stateDetails}
+            onChange={(e) => setStateDetails(e.target.value)}
+            className={errors.stateDetails ? "error-input" : ""}
+          />
+          {errors.stateDetails && <span className="error-text">{errors.stateDetails}</span>}
+        </label>
+      )}
 
       <label>
         Date d'acquisition:

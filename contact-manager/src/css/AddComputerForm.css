@@ -38,4 +38,13 @@
   button:hover {
     background: #0056b3;
   }
+
+  textarea {
+    width: 100%;
+    height: 60px;
+    resize: vertical;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
+  }
   
