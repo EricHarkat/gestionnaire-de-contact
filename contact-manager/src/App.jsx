@@ -2,10 +2,20 @@ import { useState, useEffect  } from "react";
 import axios from "axios";
 import AddComputerForm from "./components/AddComputerForm";
 import ComputerList from "./components/ComputerList";
+import "./css/App.css";
 
 const App = () => {
+  //initialisation de ma variable computer en Table vide
+  // setComputer sert à modifier l'etat de computers add, delete, update 
   const [computers, setComputers] = useState([]);
 
+  // pour rechercher par numero de serie 
+  const [searchSerial, setSearchSerial] = useState("");
+
+  //sera exécutée après chaque rendu du composant(premier argument la callback)
+  //tableau de dépendances (deuxieme argument). Ce tableau permet de contrôler quand l'effet doit être exécuté.
+  // Si le tableau est vide [], l'effet sera exécuté une seule fois après le premier rendu (comme componentDidMount).
+  // Si le tableau contient des variables, l'effet sera exécuté chaque fois qu'une de ces variables change.
   useEffect(() => {
     axios.get("http://localhost:5000/computers")
       .then(res => setComputers(res.data))
@@ -27,14 +37,36 @@ const App = () => {
     }
   };
 
+  // Filtrage des ordinateurs en fonction du numéro de série recherché
+  const filteredComputers = computers.filter(computer =>
+    computer.serialNumber.toLowerCase().includes(searchSerial.toLowerCase())
+  );
+
+
   return (
-    <div style={{ display: "flex", justifyContent: "space-between", maxWidth: "900px", margin: "50px auto" }}>
-      <div style={{ flex: 1, marginRight: "20px" }}>
+    <div className="container">
+      {/* Formulaire à gauche */}
+      <div className="form-section">
         <h2>Ajouter un ordinateur</h2>
         <AddComputerForm onAddComputer={onAddComputer} />
       </div>
-      
-      <ComputerList computers={computers} onDelete={deleteComputer} />
+
+      {/* Liste des ordinateurs à droite */}
+      <div className="table-section">
+        <h2>Parc informatique</h2>
+        
+        {/* Barre de recherche au-dessus du tableau */}
+        <input
+          type="text"
+          placeholder="Rechercher par numéro de série..."
+          value={searchSerial}
+          onChange={(e) => setSearchSerial(e.target.value)}
+          className="search-bar"
+        />
+
+        {/* Affichage du tableau filtré */}
+        <ComputerList computers={filteredComputers} onDelete={deleteComputer} />
+      </div>
     </div>
   );
 };

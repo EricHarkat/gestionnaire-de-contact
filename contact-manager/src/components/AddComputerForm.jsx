@@ -10,7 +10,7 @@ const AddComputerForm = ({ onAddComputer }) => {
   const [date, setDate] = useState("");
   const [errors, setErrors] = useState({});
 
-  const types = ["Serie X", "Serie T"];
+  const types = ["Serie X", "Serie T", "Mac","Dell"];
   const states = ["Neuf", "Bon état", "Réparé", "Hors service"];
   const operatingSystems = ["Windows 11 Famille", "Windows 11 Pro", "Linux", "macOS"];
 
