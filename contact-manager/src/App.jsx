@@ -10,7 +10,9 @@ const App = () => {
   };
 
   const deleteComputer = (id) => {
-    setComputers(computers.filter(computer => computer.id !== id));
+    if (window.confirm("Voulez-vous vraiment supprimer cet ordinateur ?")) {
+      setComputers(computers.filter(computer => computer.id !== id));
+    }
   };
 
   return (

@@ -1,10 +1,11 @@
 import ComputerItem from "./ComputerItem";
+import "../css/ComputerList.css";
 
 const ComputerList = ({ computers, onDelete }) => {
   return (
-    <div style={{ marginTop: "20px", marginLeft: "20px", flex: 1 }}>
+    <div className="table-container">
       <h3>Liste des ordinateurs</h3>
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <table>
         <thead>
           <tr>
             <th>Numéro de série</th>
