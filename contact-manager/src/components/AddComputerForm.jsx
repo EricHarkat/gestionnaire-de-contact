@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import "../css/AddComputerForm.css";
 
 const AddComputerForm = ({ onAddComputer }) => {
   const [serialNumber, setSerialNumber] = useState("");
+  const [existingSerialNumbers, setExistingSerialNumbers] = useState([]); // Liste des numéros existants
+  const [useCustomSerial, setUseCustomSerial] = useState(false);
+
+
   const [type, setType] = useState("");
   const [operatingSystem, setOperatingSystem] = useState("");
   const [owner, setOwner] = useState("");
@@ -14,6 +19,13 @@ const AddComputerForm = ({ onAddComputer }) => {
   const types = ["Serie X", "Serie T", "Mac","Dell"];
   const states = ["Neuf", "Bon état", "Hors service"];
   const operatingSystems = ["Windows 11 Famille", "Windows 11 Pro", "Linux", "macOS"];
+
+
+  useEffect(() => {
+    axios.get("http://localhost:5000/computers")
+      .then(response => setExistingSerialNumbers(response.data.map(computer => computer.serialNumber)))
+      .catch(error => console.error("Erreur de chargement des numéros de série:", error));
+  }, []);
   
 
   const validateForm = () => {
@@ -21,10 +33,14 @@ const AddComputerForm = ({ onAddComputer }) => {
 
     if (!serialNumber.trim()) newErrors.serialNumber = "Le numéro de série est requis.";
     if (!type) newErrors.type = "Veuillez sélectionner un type.";
-    if (!operatingSystem) newErrors.operatingSystem = "Veuillez sélectionner un système d'exploitation.";
+    if (!operatingSystem) newErrors.operatingSystem = "Veuillez sélectionner un OS.";
     if (!owner.trim()) newErrors.owner = "Le propriétaire est requis.";
     if (!state) newErrors.state = "Veuillez sélectionner un état.";
     if (!date) newErrors.date = "Veuillez entrer une date.";
+
+    if (state !== "Neuf" && !stateDetails.trim()) {
+      newErrors.stateDetails = "Veuillez fournir des détails sur l'état.";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -47,6 +63,7 @@ const AddComputerForm = ({ onAddComputer }) => {
 
     // Réinitialisation des champs après soumission
     setSerialNumber("");
+    setUseCustomSerial(false);
     setType("");
     setOperatingSystem("");
     setOwner("");
@@ -58,17 +75,40 @@ const AddComputerForm = ({ onAddComputer }) => {
 
   return (
     <form onSubmit={handleSubmit} className="form-container">
-      <label>
-        Serial Number:
-        <input
-          type="text"
-          placeholder="Ex: 123ABC"
-          value={serialNumber}
-          onChange={(e) => setSerialNumber(e.target.value)}
-          className={errors.serialNumber ? "error-input" : ""}
-        />
+     <label>
+        Numéro de Série:
+        <select
+          value={useCustomSerial ? "custom" : serialNumber}
+          onChange={(e) => {
+            if (e.target.value === "custom") {
+              setUseCustomSerial(true);
+              setSerialNumber("");
+            } else {
+              setUseCustomSerial(false);
+              setSerialNumber(e.target.value);
+            }
+          }}
+        >
+          <option value="">-- Sélectionner un numéro --</option>
+          {existingSerialNumbers.map((num) => (
+            <option key={num} value={num}>{num}</option>
+          ))}
+          <option value="custom">Autre (ajouter un nouveau)</option>
+        </select>
         {errors.serialNumber && <span className="error-text">{errors.serialNumber}</span>}
       </label>
+
+      {useCustomSerial && (
+        <label>
+          Nouveau numéro de série:
+          <input
+            type="text"
+            value={serialNumber}
+            onChange={(e) => setSerialNumber(e.target.value)}
+            className={errors.serialNumber ? "error-input" : ""}
+          />
+        </label>
+      )}
 
       <label>
         Type:
