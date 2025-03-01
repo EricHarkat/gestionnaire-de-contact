@@ -6,6 +6,7 @@ const computerSchema = new mongoose.Schema({
     operatingSystem: String,
     owner: String,
     state: String,
+    stateDetails: String,
     date: String
   });
   

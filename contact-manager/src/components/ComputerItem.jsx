@@ -6,6 +6,8 @@ const ComputerItem = ({ computer, onDelete }) => {
       <td>{computer.operatingSystem}</td>
       <td>{computer.owner}</td>
       <td>{computer.state}</td>
+      <td>{computer.stateDetails}</td>
+      <td>{computer.date}</td>
       <td>
         <button 
           style={{

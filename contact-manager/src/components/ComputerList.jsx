@@ -13,6 +13,8 @@ const ComputerList = ({ computers, onDelete }) => {
             <th>OS</th>
             <th>Propriétaire</th>
             <th>État</th>
+            <th>Signalement</th>
+            <th>Date d'acquisition</th>
             <th>Actions</th>
           </tr>
         </thead>
