@@ -18,9 +18,12 @@ const App = () => {
       .catch(err => console.error(err));
   };
 
+
   const deleteComputer = (id) => {
     if (window.confirm("Voulez-vous vraiment supprimer cet ordinateur ?")) {
-      setComputers(computers.filter(computer => computer.id !== id));
+      axios.delete(`http://localhost:5000/computers/${id}`)
+        .then(() => setComputers(computers.filter(computer => computer._id !== id)))
+        .catch(err => console.error(err));
     }
   };
 

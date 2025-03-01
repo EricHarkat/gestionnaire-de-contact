@@ -15,7 +15,7 @@ const ComputerItem = ({ computer, onDelete }) => {
             padding: "5px 10px", 
             cursor: "pointer"
           }} 
-          onClick={() => onDelete(computer.id)}
+          onClick={() => onDelete(computer._id)}
         >
           Supprimer
         </button>
