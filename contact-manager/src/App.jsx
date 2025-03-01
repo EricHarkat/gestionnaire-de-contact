@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect  } from "react";
+import axios from "axios";
 import AddComputerForm from "./components/AddComputerForm";
 import ComputerList from "./components/ComputerList";
 
 const App = () => {
   const [computers, setComputers] = useState([]);
 
+  useEffect(() => {
+    axios.get("http://localhost:5000/computers")
+      .then(res => setComputers(res.data))
+      .catch(err => console.error(err));
+  }, []);
+
   const onAddComputer = (computer) => {
-    setComputers([...computers, computer]);
+    axios.post("http://localhost:5000/computers", computer)
+      .then(res => setComputers([...computers, res.data]))
+      .catch(err => console.error(err));
   };
 
   const deleteComputer = (id) => {
