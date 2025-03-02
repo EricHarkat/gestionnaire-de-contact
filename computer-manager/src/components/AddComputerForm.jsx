@@ -23,7 +23,10 @@ const AddComputerForm = ({ onAddComputer }) => {
 
   useEffect(() => {
     axios.get("http://localhost:5000/computers")
-      .then(response => setExistingSerialNumbers(response.data.map(computer => computer.serialNumber)))
+      .then(response => {
+        const computers = response.data.computers || [];
+        setExistingSerialNumbers(computers); // Conserve tout l'objet, pas juste le numéro de série
+      })
       .catch(error => console.error("Erreur de chargement des numéros de série:", error));
   }, []);
   
@@ -75,29 +78,24 @@ const AddComputerForm = ({ onAddComputer }) => {
 
   return (
     <form onSubmit={handleSubmit} className="form-container">
-     <label>
-        Numéro de Série:
-        <select
-          value={useCustomSerial ? "custom" : serialNumber}
-          onChange={(e) => {
-            if (e.target.value === "custom") {
-              setUseCustomSerial(true);
-              setSerialNumber("");
-            } else {
-              setUseCustomSerial(false);
-              setSerialNumber(e.target.value);
-            }
-          }}
-        >
-          <option value="">-- Sélectionner un numéro --</option>
-          {existingSerialNumbers.map((num) => (
-            <option key={num} value={num}>{num}</option>
-          ))}
-          <option value="custom">Autre (ajouter un nouveau)</option>
-        </select>
-        {errors.serialNumber && <span className="error-text">{errors.serialNumber}</span>}
-      </label>
-
+     <select
+      value={useCustomSerial ? "custom" : serialNumber}
+      onChange={(e) => {
+        if (e.target.value === "custom") {
+          setUseCustomSerial(true);
+          setSerialNumber("");
+        } else {
+          setUseCustomSerial(false);
+          setSerialNumber(e.target.value);
+        }
+      }}
+    >
+      <option value="">-- Sélectionner un numéro --</option>
+      {existingSerialNumbers.map((computer) => (
+        <option key={computer._id} value={computer.serialNumber}>{computer.serialNumber}</option>
+      ))}
+      <option value="custom">Autre (ajouter un nouveau)</option>
+    </select>
       {useCustomSerial && (
         <label>
           Nouveau numéro de série:

@@ -14,12 +14,22 @@ exports.addComputer = async (req, res) => {
   // Récupérer tous les ordinateurs
   exports.getComputer = async (req, res) => {
     try {
-      const computers = await Computer.find();
-      res.json(computers);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
+        const skip = (page - 1) * limit;
+
+        const totalComputers = await Computer.countDocuments();
+        const computers = await Computer.find().skip(skip).limit(limit);
+
+        res.json({
+            computers,
+            totalPages: Math.ceil(totalComputers / limit),
+            currentPage: page
+        });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
-  };
+};
   
   // Supprimer un ordinateur
   exports.deleteComputer = async (req, res) => {
