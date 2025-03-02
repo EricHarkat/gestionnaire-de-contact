@@ -1,0 +1,13 @@
+ 
+services:
+  frontend:
+    build: ./computer-manager
+    ports:
+      - "3000:80"  # Le frontend sera disponible sur http://localhost:3000
+
+  backend:
+    build: ./server
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://host.docker.internal:27017/
