@@ -25,10 +25,10 @@ const AddComputerForm = ({ onAddComputer }) => {
     axios.get("http://localhost:5000/computers")
       .then(response => {
         const computers = response.data.computers || [];
-        setExistingSerialNumbers(computers); // Conserve tout l'objet, pas juste le numéro de série
+        setExistingSerialNumbers(computers); 
       })
       .catch(error => console.error("Erreur de chargement des numéros de série:", error));
-  }, []);
+  }, [onAddComputer]);
   
 
   const validateForm = () => {

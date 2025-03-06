@@ -33,7 +33,6 @@ exports.addComputer = async (req, res) => {
   
   // Supprimer un ordinateur
   exports.deleteComputer = async (req, res) => {
-    console.log("hello")
     try {
       await Computer.findByIdAndDelete(req.params.id);
       res.json({ message: 'Ordinateur supprimé' });
