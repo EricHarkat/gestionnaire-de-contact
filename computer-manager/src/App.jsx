@@ -22,13 +22,13 @@ const App = () => {
   // Si le tableau est vide [], l'effet sera exécuté une seule fois après le premier rendu (comme componentDidMount).
   // Si le tableau contient des variables, l'effet sera exécuté chaque fois qu'une de ces variables change.
   useEffect(() => {
-    axios.get(`http://localhost:5000/computers?page=${page}&limit=${limit}`)
+    axios.get(`http://localhost:5000/computers?page=${page}&limit=${limit}&serialNumber=${searchSerial}`)
       .then(res => {
         setComputers(res.data.computers);
         setTotalPages(res.data.totalPages);
       })
       .catch(err => console.error(err));
-  }, [page]);
+  }, [page, searchSerial]);
 
   const onAddComputer = (computer) => {
     axios.post("http://localhost:5000/computers", computer)
@@ -43,10 +43,6 @@ const App = () => {
         .catch(err => console.error(err));
     }
   };
-
-  const filteredComputers = computers.filter(computer =>
-    computer.serialNumber.toLowerCase().includes(searchSerial.toLowerCase())
-  );
 
   const handlePrevious = () => {
     if (page > 1) setPage(page - 1);
@@ -73,7 +69,7 @@ const App = () => {
           className="search-bar"
         />
 
-        <ComputerList computers={filteredComputers} onDelete={deleteComputer} />
+        <ComputerList computers={computers} onDelete={deleteComputer} />
 
         <div className="pagination">
           <button onClick={handlePrevious} disabled={page === 1}>Précédent</button>

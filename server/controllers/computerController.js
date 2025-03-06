@@ -11,15 +11,22 @@ exports.addComputer = async (req, res) => {
     }
   };
   
-  // Récupérer tous les ordinateurs avec la paginatiuon 
+  // Récupérer tous les ordinateurs avec la paginatiuon et parametre serial number 
   exports.getComputer = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 5;
         const skip = (page - 1) * limit;
+        const serialNumber = req.query.serialNumber || "";
+
+        // Création du filtre pour la recherche
+        let filter = {};
+        if (serialNumber) {
+            filter.serialNumber = { $regex: serialNumber, $options: "i" }; // Recherche partielle insensible à la casse
+        }
 
         const totalComputers = await Computer.countDocuments();
-        const computers = await Computer.find().skip(skip).limit(limit);
+        const computers = await Computer.find(filter).skip(skip).limit(limit);
 
         res.json({
             computers,
