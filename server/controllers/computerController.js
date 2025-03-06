@@ -11,7 +11,7 @@ exports.addComputer = async (req, res) => {
     }
   };
   
-  // Récupérer tous les ordinateurs
+  // Récupérer tous les ordinateurs avec la paginatiuon 
   exports.getComputer = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -29,6 +29,19 @@ exports.addComputer = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
+};
+
+// Récupérer tous les ordinateurs avec la paginatiuon 
+exports.getAllComputer = async (req, res) => {
+  try {
+      const computers = await Computer.find();
+
+      res.json({
+          computers
+      });
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
 };
   
   // Supprimer un ordinateur

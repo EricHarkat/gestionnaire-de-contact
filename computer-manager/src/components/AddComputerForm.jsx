@@ -22,9 +22,10 @@ const AddComputerForm = ({ onAddComputer }) => {
 
 
   useEffect(() => {
-    axios.get("http://localhost:5000/computers")
+    axios.get("http://localhost:5000/computers/allComputer")
       .then(response => {
         const computers = response.data.computers || [];
+        console.log(computers)
         setExistingSerialNumbers(computers); 
       })
       .catch(error => console.error("Erreur de chargement des numéros de série:", error));
